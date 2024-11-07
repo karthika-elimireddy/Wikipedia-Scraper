@@ -114,7 +114,7 @@ def save(leaders_per_country,file_name):
 
     """
     with open(file_name, "w") as file:
-        json.dump(leaders_per_country, file)
+        json.dump(leaders_per_country, file,indent = 4)
 
 def read(file_name):
     """
