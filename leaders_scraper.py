@@ -35,6 +35,7 @@ def get_first_paragraph(wikipedia_url):
     for p in p_tags:
         if len(p.get_text()) > 100 :
             first_paragraph = clean_data(p.get_text())
+            #first_paragraph = p.get_text()
             break
     return first_paragraph
 
@@ -51,7 +52,8 @@ def clean_data(text):
     """
     text = re.sub(r'<.*?>', '', text)
     text = re.sub(r'\[.*?\]', '', text)
-    #text = re.sub(r'[^a-zA-Z0-9.,?!\'" ]+', ' ', text)
+    #text = re.sub(r'[^a-zA-Z0-9.,?!\'" ]+', ' ', text) \u00e9 \u00ef /kuld/ /rrfrd/ \u00c9
+    #text = re.sub(r'[^\u00e9-\u007F]', '', text)
     text = re.sub(r'\s+', ' ', text)
     text = text.strip()
     return text
@@ -113,8 +115,8 @@ def save(leaders_per_country,file_name):
         file_name (str) : Name of the JSON file.
 
     """
-    with open(file_name, "w") as file:
-        json.dump(leaders_per_country, file,indent = 4)
+    with open(file_name, "w", encoding='utf-8') as file:
+        json.dump(leaders_per_country, file,indent = 4, ensure_ascii=False)
 
 def read(file_name):
     """
@@ -127,7 +129,7 @@ def read(file_name):
         Returns the data of JSON file
     """
     
-    with open(file_name, "r") as file:
+    with open(file_name, "r", encoding= 'utf-8') as file:
         data = json.load(file)
     return data
 
@@ -157,6 +159,7 @@ def main():
     leaders_url = root_url + "/leaders"
 
     leaders_per_country = get_leaders(cookie_url,countries_url,leaders_url)
+    #print(leaders_per_country)
     save(leaders_per_country,"leaders.json")
     result=read("leaders.json")
     print(result)
